@@ -1,10 +1,11 @@
 import { Container, Flex, Box, Heading, Image } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { FaFacebookSquare, FaTwitterSquare, FaLinkedin } from "react-icons/fa";
 import Posts from "./Posts";
 
 const SingleBlog = ({ categoryColor }) => {
+  const executedRef = useRef(false);
   let { slug } = useParams();
   const [post, setPost] = useState([]);
   const [author, setAuthor] = useState([]);
@@ -16,10 +17,10 @@ const SingleBlog = ({ categoryColor }) => {
     return data[0];
   };
 
-  const fetchAuthor = async () => {
-    const res = await fetch("https://randomuser.me/api");
-    const { results } = await res.json();
-    return results[0];
+  const fetchAuthor = async (userId) => {
+    const res = await fetch(`http://localhost:5000/users/${userId}`);
+    const results = await res.json();
+    return results;
   };
 
   const fetchRelatedPosts = async (query) => {
@@ -31,9 +32,13 @@ const SingleBlog = ({ categoryColor }) => {
   };
 
   useEffect(() => {
+    if (executedRef.current) {
+      return;
+    }
+
     const getDetails = async () => {
       const postData = await fetchPost();
-      const authorData = await fetchAuthor();
+      const authorData = await fetchAuthor(postData.userId);
       const relatedPostsData = await fetchRelatedPosts(
         postData.title.split(" ")
       );
@@ -41,10 +46,12 @@ const SingleBlog = ({ categoryColor }) => {
       setAuthor(authorData);
       setRelatedPosts(relatedPostsData);
     };
-    getDetails();
-  }, []);
 
-  console.log(relatedPosts);
+    getDetails();
+
+    executedRef.current = true;
+  }, [post, author, relatedPosts]);
+
   return (
     <Box>
       <Container maxWidth={["100%", "100%", "70%"]} my={10}>
@@ -62,13 +69,9 @@ const SingleBlog = ({ categoryColor }) => {
         </Flex>
 
         <Flex alignItems="center" mb={10}>
-          <Image
-            src={author?.picture?.medium}
-            borderRadius="full"
-            boxSize="70px"
-          />
+          <Image src={author?.picture} borderRadius="full" boxSize="70px" />
           <Box color="teal" ml={3}>
-            By {author?.name?.first} {author?.name?.last}
+            By {author?.name}
           </Box>
         </Flex>
 

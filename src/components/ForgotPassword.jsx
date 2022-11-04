@@ -1,9 +1,17 @@
-import { Button, FormControl, FormLabel, Input, Box } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Box,
+  Heading,
+} from "@chakra-ui/react";
 
 const ForgotPassword = () => {
   return (
     <Box>
-      <Box ml={5} mb={4}>
+      <Heading my={5}>Forgot Password?</Heading>
+      <Box mb={4}>
         No worries! Enter the email associated with your account. We’ll send you
         a secure link to reset your password.
       </Box>

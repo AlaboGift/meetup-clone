@@ -13,12 +13,14 @@ import {
   Link,
   Flex,
   Box,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 
 import meetUpLogo from "../assets/meetup-logo.svg";
 
 const Login = ({ setContent }) => {
-  const [input, setInput] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const [formValues, setFormValues] = useState({
@@ -34,10 +36,34 @@ const Login = ({ setContent }) => {
     }));
   };
 
-  console.log(formValues);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    formValues.email === "" ? setEmailError(true) : setEmailError(false);
+
+    formValues.password === ""
+      ? setPasswordError(true)
+      : setPasswordError(false);
+
+    if (emailError === false && passwordError === false) {
+      const res = await fetch(
+        "http://euidemapps.com.ng/fixmeet/api/v1/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(formValues),
+        }
+      );
+
+      const data = await res.json();
+
+      console.log(data);
+    }
+  };
 
   return (
-    <Box>
+    <form onSubmit={onSubmit}>
       <>
         <Center>
           <Image src={meetUpLogo} height={50} mb={3} />
@@ -54,7 +80,7 @@ const Login = ({ setContent }) => {
       </>
 
       <>
-        <FormControl my={3}>
+        <FormControl my={3} isInvalid={emailError}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
@@ -63,8 +89,12 @@ const Login = ({ setContent }) => {
             placeholder="Enter Email"
             onChange={handleInputChange}
           />
+          {emailError && (
+            <FormErrorMessage>Email is required.</FormErrorMessage>
+          )}
         </FormControl>
-        <FormControl my={3}>
+
+        <FormControl my={3} isInvalid={passwordError}>
           <Flex justifyContent="space-between">
             <FormLabel>Password</FormLabel>
             <Link color="teal" onClick={() => setContent("forgotPassword")}>
@@ -87,6 +117,9 @@ const Login = ({ setContent }) => {
               </Button>
             </InputRightElement>
           </InputGroup>
+          {passwordError && (
+            <FormErrorMessage>Password is required.</FormErrorMessage>
+          )}
         </FormControl>
         <Checkbox defaultChecked my={3}>
           Keep me signed in
@@ -102,11 +135,12 @@ const Login = ({ setContent }) => {
           color="#ffffff"
           bg="red.200"
           fontSize="lg"
+          type="submit"
         >
           Log in
         </Button>
       </>
-    </Box>
+    </form>
   );
 };
 

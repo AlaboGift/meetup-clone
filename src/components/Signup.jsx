@@ -1,77 +1,69 @@
-import { useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  FormHelperText,
-  InputGroup,
-  InputRightElement,
-  Checkbox,
-  Link,
-  Box,
-} from "@chakra-ui/react";
+import { Button, Link, Box, Heading, Center, Image } from "@chakra-ui/react";
+import meetUpLogo from "../assets/meetup-logo.svg";
+import { FaFacebookF, FaGoogle, FaApple, FaEnvelope } from "react-icons/fa";
 
 const Signup = ({ setContent }) => {
-  const [show, setShow] = useState(false);
-  const handleClick = () => setShow(!show);
-
   return (
-    <Box>
-      <Box>
-        <FormControl mb={6}>
-          <FormLabel fontWeight="bold">Your Name</FormLabel>
-          <Input type="text" />
-          <FormHelperText>Name is required</FormHelperText>
-        </FormControl>
-        <FormControl mb={6}>
-          <FormLabel fontWeight="bold">Email address</FormLabel>
-          <Input type="email" placeholder="example@email.com" />
-          <FormHelperText>
-            We’ll use your email address to send you updates
-          </FormHelperText>
-        </FormControl>
-
-        <FormControl my={6}>
-          <FormLabel fontWeight="bold">Password</FormLabel>
-          <InputGroup size="md">
-            <Input
-              pr="4.5rem"
-              type={show ? "text" : "password"}
-              placeholder="Enter password"
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel fontWeight="bold">Age</FormLabel>
-          <Checkbox> I am 18 years of age or older.</Checkbox>
-        </FormControl>
-      </Box>
-
-      <Box>
-        <Button
-          _hover={{ opacity: "0.8" }}
-          w="100%"
-          color="#ffffff"
-          bg="red.200"
-          fontSize="lg"
-        >
-          Sign up
-        </Button>
-      </Box>
+    <>
+      <Center>
+        <Image src={meetUpLogo} height={50} mb={3} />
+      </Center>
+      <Heading as="h3" size="lg" pb={2} fontWeight="bold" align="center">
+        Sign up
+      </Heading>
       <Box align="center">
-        Already a member?{" "}
-        <Link color="teal" onClick={() => setContent("login")}>
+        Already a member?
+        <Link ml={1} color="teal" onClick={() => setContent("login")}>
           Login
         </Link>
       </Box>
-    </Box>
+      <Box>
+        <Button
+          my={3}
+          pt={6}
+          pb={6}
+          w="100%"
+          variant="outline"
+          leftIcon={<FaFacebookF color="blue" />}
+        >
+          Continue with facebook
+        </Button>
+
+        <Button
+          my={3}
+          pt={6}
+          pb={6}
+          w="100%"
+          variant="outline"
+          leftIcon={<FaGoogle color="red" />}
+        >
+          Continue with Google
+        </Button>
+
+        <Button
+          my={3}
+          pt={6}
+          pb={6}
+          w="100%"
+          variant="outline"
+          leftIcon={<FaApple color="black" />}
+        >
+          Continue with Apple
+        </Button>
+
+        <Button
+          my={3}
+          pt={6}
+          pb={6}
+          w="100%"
+          variant="outline"
+          leftIcon={<FaEnvelope color="black" />}
+          onClick={() => setContent("emailsignup")}
+        >
+          Sign up with Email
+        </Button>
+      </Box>
+    </>
   );
 };
 

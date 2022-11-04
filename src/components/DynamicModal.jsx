@@ -4,17 +4,17 @@ import {
   ModalContent,
   Button,
   useDisclosure,
-  Heading,
   ModalCloseButton,
   ModalBody,
-  ModalHeader,
 } from "@chakra-ui/react";
 
 import Login from "./Login";
 import Signup from "./Signup";
 import ForgotPassword from "./ForgotPassword";
+import Languages from "./Languages";
+import EmailSignup from "./EmailSignup";
 
-const DynamicModal = ({ title, content, setContent }) => {
+const DynamicModal = ({ title, content, setContent, size, setLanguage }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOpen = () => {
@@ -33,21 +33,28 @@ const DynamicModal = ({ title, content, setContent }) => {
         {title}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalHeader as="h3" size="lg" ml={5} pb={2} mb={4} fontWeight="bold">
-          {title}
-          <ModalCloseButton />
-        </ModalHeader>
+      <Modal isOpen={isOpen} onClose={onClose} size={size}>
         <ModalOverlay />
-        <ModalBody>
-          <ModalContent p={10}>
+        <ModalContent p={10}>
+          <ModalCloseButton />
+          <ModalBody>
             {content === "login" && <Login setContent={setContent} />}
             {content === "signup" && <Signup setContent={setContent} />}
             {content === "forgotPassword" && (
               <ForgotPassword setContent={setContent} />
             )}
-          </ModalContent>
-        </ModalBody>
+            {content === "languages" && (
+              <Languages
+                onClose={onClose}
+                setLanguage={setLanguage}
+                defaultLanguage={title}
+              />
+            )}
+            {content === "emailsignup" && (
+              <EmailSignup setContent={setContent} />
+            )}
+          </ModalBody>
+        </ModalContent>
       </Modal>
     </>
   );
